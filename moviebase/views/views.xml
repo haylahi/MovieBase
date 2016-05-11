@@ -1,0 +1,143 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="moviebase_movie_tree_view">
+            <field name="name">movies.treeview</field>
+            <field name="model">moviedatabase.movie</field>
+            <field name="arch" type="xml">
+                <tree name="movies_tree">
+                    <field name="title"/>
+                    <field name="duration" widget="float_time"/>
+                    <field name="release_year"/>
+                    <field name="filepath"/>
+                    <field name="movie_actors_ids"/>
+                    <field name="genre"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="moviebase_people_tree_view">
+            <field name="name">people.treeview</field>
+            <field name="model">moviedatabase.people</field>
+            <field name="arch" type="xml">
+                <tree name="people_tree">
+                    <field name="person_name"/>
+                    <field name="person_age"/>
+                    <field name="person_id"/>
+                    <field name="is_actor"/>
+                    <field name="is_director"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- movie form view -->
+        <record model="ir.ui.view" id="moviebase_movie_form_view">
+            <field name="name">movies.formview</field>
+            <field name="model">moviedatabase.movie</field>
+            <field name="arch" type="xml">
+                <form name="movie_form" string="Movies">
+                    <sheet name="movie_sheet" string="Movie">
+                        <group name="movie_top_group">
+                            <group name="movie_information_group" string="Movie Information">
+                                <field name="title"/>
+                                <field name="duration" widget="float_time"/>
+                                <field name="release_year"/>
+                                <field name="genre"/>
+                            </group>
+                            <group name="file_info" string="File Information">
+                                <field name="file_format"/>
+                                <field name="filepath"/>
+                            </group>
+                        </group>
+                        <notebook name="actors_in_movie_notbook">
+                            <page name="actors_page" string="Actors">
+                                <field name="movie_actors_ids">
+                                    <tree string="person_id_tree">
+                                        <field name="person_name"/>
+                                        <field name="person_age"/>
+                                        <field name="is_actor"/>
+                                        <field name="is_director"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- person form view -->
+        <record model="ir.ui.view" id="moviebase_people_form_view">
+            <field name="name">people.formview</field>
+            <field name="model">moviedatabase.people</field>
+            <field name="arch" type="xml">
+                <form name="people_form" string="Persons">
+                    <sheet name="people_sheet" string="Person">
+                        <group name="people_information_group" string="Information">
+                            <field name="person_name"/>
+                            <field name="person_age"/>
+                            <field name="is_actor"/>
+                            <field name="is_director"/>
+                        </group>
+                        <notebook name="person_acted_in_notebook">
+                            <page name="movies_pages" string="Movies">
+                                <field name="person_id">
+                                    <field name="title"/>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Movies tree view -->
+        <record id="action_view_movies" model="ir.actions.act_window">
+            <field name="name">Movies</field>
+            <field name="res_model">moviedatabase.movie</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context" eval="{'search_default_unreleased': 1}"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add your first movie</p>
+            </field>
+        </record>
+
+        <!-- People tree view -->
+        <record id="action_view_people" model="ir.actions.act_window">
+            <field name="name">People</field>
+            <field name="res_model">moviedatabase.people</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add your first actor/director</p>
+            </field>
+        </record>
+
+        <!-- wizard view -->
+        <record model="ir.ui.view" id="movie_wizard_form_view">
+            <field name="name">wizard.movie_form</field>
+            <field name="model">moviedatabase.addmoviewizard</field>
+            <field name="arch" type="xml">
+                <form string="Add Movie">
+                    <group>
+                        <field name="movie_titles">
+                            <tree>
+                                <field name="title"/>
+                                <field name="duration" widget="float_time"/>
+                                <field name="release_year"/>
+                                <field name="genre"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="launch_movie_wizard" name="Add Movie" src_model="moviedatabase.movie" res_model="moviedatabase.addmoviewizard" view_mode="form" target="new" key2="client_action_multi"/>
+
+        <menuitem id="custom_menu" name="Movie Database"/>
+        <menuitem id="moviedatabase_menu" name="Database" parent="custom_menu"/>
+        <menuitem id="moviedatabase_movies_menu" name="Movies" parent="moviedatabase_menu" action="action_view_movies"/>
+        <menuitem id="moviedatabase_people_menu" name="People" parent="moviedatabase_menu" action="action_view_people"/>
+    </data>
+</openerp>
